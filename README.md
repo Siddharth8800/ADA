@@ -678,59 +678,61 @@ int main() {
 
 ## Quick Sort
 ```
-#include<iostream>
-#include<vector>
-#include<algorithm>
+#include <iostream>
+#include <algorithm>
 using namespace std;
 
-
-int partition(vector<int>& arr, int low, int high) {
-    int pivot = arr[high];
-    int i = (low - 1);
-    for (int j = low; j <= high - 1; j++) {
-        if (arr[j] < pivot) {
-            i++;
-            swap(arr[i], arr[j]);
-        }
-    }
-    swap(arr[i + 1], arr[high]);
-    return (i + 1);
+int partition(vector<int> &arr, int low, int high) {
+	int i = low;
+	int j = high;
+	int pivot = arr[low];
+	while (i < j) {
+		while (arr[i] <= pivot) {
+			i++;
+		}
+		while (arr[j] > pivot) {
+			j--;
+		}
+		if (i < j) {
+			swap(arr[i], arr[j]);
+		}
+	}
+	swap(arr[low], arr[j]);
+	return j;
 }
 
-  
 void quickSort(vector<int>& arr, int low, int high) {
-    if (low < high) {
-        int pivot = partition(arr, low, high);
-        quickSort(arr, low, pivot - 1);
-        quickSort(arr, pivot + 1, high);
-    }
+    if (low < high) {
+        int pivot = partition(arr, low, high);
+        quickSort(arr, low, pivot - 1);
+        quickSort(arr, pivot + 1, high);
+    }
 }
 
   
 
 void printArray(const vector<int>& arr) {
-    for (int i = 0; i < arr.size(); i++) {
-        cout << arr[i] << " ";
-    }
-    cout << endl;
+    for (int i = 0; i < arr.size(); i++) {
+        cout << arr[i] << " ";
+    }
+    cout << endl;
 }
-
-  
 
 int main() {
-    int n;
-    cout << "Enter the number of elements: ";
-    cin >> n;
-    vector<int> arr(n);
-    cout << "Enter the elements: ";
-    for (int i = 0; i < n; i++) {
-        cin >> arr[i];
-    }
+    int n;
+    cout << "Enter the number of elements: ";
+    cin >> n;
+    vector<int> arr(n);
+    cout << "Enter the elements: ";
+    for (int i = 0; i < n; i++) {
+        cin >> arr[i];
+    }
 
-    quickSort(arr, 0, n - 1);
-    cout << "Sorted array: ";
-    printArray(arr);
+    quickSort(arr, 0, n - 1);
+    cout << "Sorted array: ";
+    printArray(arr);
 }
+
 ```
 
 ## Binary Search
