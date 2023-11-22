@@ -780,58 +780,70 @@ int main() {
 
 ## All Paths to a destination
 ```
-#include<iostream>
-#include<vector>
-#define fr(i, a, b) for(int i = a; i < b; i++)
+#include <iostream>
+#include <vector>
 using namespace std;
 
-void allPathsHelp(vector<vector<bool> > &arr, vector<bool> &visited, int s, vector<int> &smallAns) {
-    visited[s] = true;
-    smallAns.push_back(s);
-    fr(i, 0, arr.size()) {
-        if (i == s) {
-            continue;
-        }
-        if(arr[s][i] && !visited[i]) {
-            allPathsHelp(arr, visited, i, smallAns);
-        }
-    }
+void findAllPaths(vector<vector<int> > graph, int curr, int dest, vector<bool> &visited, vector<int> &path, vector<vector<int> > &allPaths) {
+    visited[curr] = true;
+    path.push_back(curr);
+    if (curr == dest) {
+        allPaths.push_back(path);
+    } else {
+        for (int i = 0; i < graph[curr].size(); i++) {
+            if (graph[curr][i] != 0 && !visited[i]) {
+                findAllPaths(graph, i, dest, visited, path, allPaths);
+            }
+        }
+    }
+    visited[curr] = false;
+    path.pop_back();
 }
 
-
-vector<vector<int> > allPaths(vector<vector<bool> > arr) {
-    vector<bool> visited(arr.size(), false);
-    vector<vector<int> > ans;
-    fr(i, 0, arr.size()) {
-        if(!visited[i]) {
-            vector<int> smallAns;
-            allPathsHelp(arr, visited, i, smallAns);
-            ans.push_back(smallAns);
-        }
-    }
-    return ans;
+vector<vector<int> > getAllPaths(vector<vector<int> > graph, int src, int dest) {
+    vector<vector<int> > allPaths;
+    vector<bool> visited(graph.size(), false);
+    vector<int> path;
+    findAllPaths(graph, src, dest, visited, path, allPaths);
+    return allPaths;
 }
-  
+
 int main() {
-    int ver, edg;
-    cout << "Enter no. of vertexs and edges: ";
-    cin >> ver >> edg;
-    vector<vector<bool> > arr(ver, vector<bool>(ver,false));
-    cout << "Enter Edges: " << endl;
-    for (int i = 0; i < edg; i++) {
-        int fi, si;
-        cin >> fi >> si;
-        arr[fi][si] = true;
-        arr[si][fi] = true;
-    }
+    int ver, edg;
+    cout << "Enter the number of vertices: ";
+    cin >> ver;
+    cout << "Enter the number of edges: ";
+    cin >> edg;
+    vector<vector<int> > graph(ver);
+    for(int i = 0; i < ver; i++) {
+        graph[i] = vector<int>(ver,0);
+    }
+    cout << "Enter the edges and weight: " << endl;
+    for (int i = 0; i < edg; i++) {
+        int a, b, w;
+        cin >> a >> b >> w;
+        // cout << "Enter the weight:";
+        // cin >> w;
+        graph[a][b] = w;
+        graph[b][a] = w;
+    }
+    int start, end;
+    cout << "Enter the starting and ending vertex: ";
+    cin >> start >> end;
+    vector<bool> visited(ver, false);
+    vector<vector<int> > allPaths = getAllPaths(graph, start, end);
+    int sum = 0;
+    for (int i = 0; i < allPaths.size(); i++) {
+        for (int j = 0; j < allPaths[i].size(); j++) {
+            int ele1 = allPaths[i][j];
+            int ele2 = allPaths[i][j + 1];
+            sum += graph[ele1][ele2];
+            cout << ele1 << " ";
+        }
+        cout << "  Sum: " << sum << endl;
+        sum = 0;
+    }
 
-    vector<vector<int> > ans = allPaths(arr);
-    fr(i, 0, ans.size()) {
-        fr(j, 0, ans[i].size()) {
-            cout << ans[i][j] << " ";
-        }
-        cout << endl;
-    }
 }
 ```
 
